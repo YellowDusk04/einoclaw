@@ -1,0 +1,40 @@
+models:
+  - model_name: 
+    model_id: 
+    provider: 
+    api_key: 
+    base_url: 
+    enable_thinking: 
+
+coze_loop:
+  enabled: false
+  api_token: 
+  workspace_id: 
+
+handlers:
+  filesystem:
+    enabled: true
+    ls: true
+    read_file: true
+    write_file: false 
+    edit_file: false 
+    glob: false 
+    grep: false 
+    execute: false
+  patch_tool_calls:
+    enabled: true
+  summarization:
+    enabled: true
+    context_tokens: 60
+  reduction:
+    enabled: true
+    max_length_for_trunc: 20
+    max_tokens_for_clear: 50
+  automemory:
+    enabled: false
+  permission:
+    enabled: false
+    black_list: ["rm"]
+  skill:
+    enabled: false
+    dir: 

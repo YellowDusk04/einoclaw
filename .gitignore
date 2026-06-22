@@ -1,0 +1,7 @@
+.env
+*.evlog
+study*
+.vscode
+main
+test*
+workspace

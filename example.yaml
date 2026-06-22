@@ -28,8 +28,9 @@ handlers:
     context_tokens: 60
   reduction:
     enabled: true
-    max_length_for_trunc: 20
+    max_length_for_trunc: 15
     max_tokens_for_clear: 50
+    clear_at_least_tokens: 30
   automemory:
     enabled: false
   permission:

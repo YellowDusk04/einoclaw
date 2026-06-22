@@ -40,10 +40,7 @@ func newTokenCounter() func(ctx context.Context, msg []adk.AgenticMessage, tools
 	return func(ctx context.Context, msg []adk.AgenticMessage, tools []*schema.ToolInfo) (int64, error) {
 		var count int64
 		for _, m := range msg {
-			tokens := enc.Encode(m.String(), nil, nil)
-			for _, t := range tokens {
-				count += int64(t)
-			}
+			count += int64(len(enc.Encode(m.String(), nil, nil)))
 		}
 		for _, tl := range tools {
 			tl_ := *tl
@@ -52,10 +49,7 @@ func newTokenCounter() func(ctx context.Context, msg []adk.AgenticMessage, tools
 			if err != nil {
 				return 0, fmt.Errorf("failed to marshal tool info: %w", err)
 			}
-			tokens := enc.Encode(text, nil, nil)
-			for _, t := range tokens {
-				count += int64(t)
-			}
+			count += int64(len(enc.Encode(text, nil, nil)))
 		}
 		return count, nil
 	}
@@ -144,13 +138,14 @@ func newReductionHandler() adk.TypedChatModelAgentMiddleware[adk.AgenticMessage]
 	handler, err := reduction.NewTyped(
 		ctx,
 		&reduction.TypedConfig[adk.AgenticMessage]{
-			Backend:           newLocal(),
-			RootDir:           rootDir,
-			MaxLengthForTrunc: rcfg.MaxLengthForTrunc << 10,        // k
-			MaxTokensForClear: int64(rcfg.MaxTokensForClear) << 10, // k
-			TokenCounter:      newTokenCounter(),
-			TruncExcludeTools: []string{"skill"},
-			ClearExcludeTools: []string{"skill"},
+			Backend:            newLocal(),
+			RootDir:            rootDir,
+			MaxLengthForTrunc:  rcfg.MaxLengthForTrunc << 10,
+			MaxTokensForClear:  rcfg.MaxTokensForClear << 10,
+			ClearAtLeastTokens: rcfg.ClearAtLeastTokens << 10,
+			TokenCounter:       newTokenCounter(),
+			TruncExcludeTools:  []string{"skill"},
+			ClearExcludeTools:  []string{"skill"},
 		},
 	)
 	if err != nil {

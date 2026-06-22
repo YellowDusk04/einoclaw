@@ -39,9 +39,10 @@ type (
 			} `yaml:"summarization"`
 
 			Reduction struct {
-				Enabled           bool `yaml:"enabled"`
-				MaxLengthForTrunc int  `yaml:"max_length_for_trunc"`
-				MaxTokensForClear int  `yaml:"max_tokens_for_clear"`
+				Enabled            bool  `yaml:"enabled"`
+				MaxLengthForTrunc  int   `yaml:"max_length_for_trunc"`
+				MaxTokensForClear  int64 `yaml:"max_tokens_for_clear"`
+				ClearAtLeastTokens int64 `yaml:"clear_at_least_tokens"`
 			} `yaml:"reduction"`
 
 			AutoMemory struct {

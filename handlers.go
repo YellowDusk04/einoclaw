@@ -18,6 +18,7 @@ import (
 	"github.com/cloudwego/eino/adk/middlewares/skill"
 	"github.com/cloudwego/eino/adk/middlewares/summarization"
 	"github.com/cloudwego/eino/components/tool"
+	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/schema"
 	"github.com/pkoukk/tiktoken-go"
 	"github.com/pterm/pterm"
@@ -270,6 +271,10 @@ func (b *toolCallErrorWrapper) WrapInvokableToolCall(_ context.Context, endpoint
 	return func(ctx context.Context, argumentsInJSON string, opts ...tool.Option) (string, error) {
 		output, err := endpoint(ctx, argumentsInJSON)
 		if err != nil {
+			// ignore interrupt error
+			if _, ok := compose.IsInterruptRerunError(err); ok {
+				return "", err
+			}
 			return "tool call error: " + err.Error(), nil
 		}
 		return output, nil

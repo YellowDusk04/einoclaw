@@ -257,6 +257,7 @@ func renderTokenUsage() {
 		pterm.White(formatNum(promptTokens)),
 		pterm.LightGreen(formatNum(cachedTokens)),
 	)))
+	moveCursorToInputLine()
 }
 
 func formatNum(n int) string {

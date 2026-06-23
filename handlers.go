@@ -138,14 +138,15 @@ func newReductionHandler() adk.TypedChatModelAgentMiddleware[adk.AgenticMessage]
 	handler, err := reduction.NewTyped(
 		ctx,
 		&reduction.TypedConfig[adk.AgenticMessage]{
-			Backend:            newLocal(),
-			RootDir:            rootDir,
-			MaxLengthForTrunc:  rcfg.MaxLengthForTrunc << 10,
-			MaxTokensForClear:  rcfg.MaxTokensForClear << 10,
-			ClearAtLeastTokens: rcfg.ClearAtLeastTokens << 10,
-			TokenCounter:       newTokenCounter(),
-			TruncExcludeTools:  []string{"skill"},
-			ClearExcludeTools:  []string{"skill"},
+			Backend:                   newLocal(),
+			RootDir:                   rootDir,
+			MaxLengthForTrunc:         rcfg.MaxLengthForTrunc << 10,
+			MaxTokensForClear:         rcfg.MaxTokensForClear << 10,
+			ClearAtLeastTokens:        rcfg.ClearAtLeastTokens << 10,
+			ClearRetentionSuffixLimit: rcfg.ClearRetentionSuffixLimit,
+			TokenCounter:              newTokenCounter(),
+			TruncExcludeTools:         []string{"skill"},
+			ClearExcludeTools:         []string{"skill"},
 		},
 	)
 	if err != nil {

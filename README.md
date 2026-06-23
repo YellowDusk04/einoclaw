@@ -5,6 +5,7 @@
 ## 效果展示
 
 ![demo](docs/assets/img/create-a-demo.png)
+(图中API_KEY已删除)
 
 ### 人工审批
 

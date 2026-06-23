@@ -540,7 +540,7 @@ func renderToolResult(message adk.AgenticMessage) {
 			if content.Text != nil {
 				text := content.Text.Text
 				if text != "" {
-					maxLineNum := 40
+					maxLineNum := 20
 					if lines := strings.Split(text, "\n"); len(lines) > maxLineNum {
 						half, total := maxLineNum/2, len(lines)
 						newLines := lines[:half]

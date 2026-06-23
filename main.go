@@ -237,11 +237,11 @@ func OnAgentEvents(ctx context.Context, tc *adk.TurnContext[chatItem, adk.Agenti
 				for _, block := range chunk.ContentBlocks {
 					if block.AssistantGenText != nil {
 						if text := block.AssistantGenText.Text; text != "" {
+							mu.Lock()
 							if isFirstTextChunk {
 								isFirstTextChunk = false
 								addChatLine("\n⏺ ")
 							}
-							mu.Lock()
 							appendToChat(block.AssistantGenText.Text)
 							mu.Unlock()
 						}

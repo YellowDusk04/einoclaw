@@ -21,7 +21,6 @@ import (
 	"github.com/cloudwego/eino/compose"
 	"github.com/cloudwego/eino/schema"
 	"github.com/pkoukk/tiktoken-go"
-	"github.com/pterm/pterm"
 )
 
 func newLocal() *local.Local {
@@ -145,8 +144,8 @@ func newReductionHandler() adk.TypedChatModelAgentMiddleware[adk.AgenticMessage]
 			ClearAtLeastTokens:        rcfg.ClearAtLeastTokens << 10,
 			ClearRetentionSuffixLimit: rcfg.ClearRetentionSuffixLimit,
 			TokenCounter:              newTokenCounter(),
-			TruncExcludeTools:         []string{"skill"},
-			ClearExcludeTools:         []string{"skill"},
+			TruncExcludeTools:         []string{toolNameSkill},
+			ClearExcludeTools:         []string{toolNameSkill},
 		},
 	)
 	if err != nil {
@@ -159,37 +158,14 @@ func newAutoMemmoryHandler() adk.TypedChatModelAgentMiddleware[adk.AgenticMessag
 	handler, err := automemory.New(
 		ctx,
 		&automemory.Config[adk.AgenticMessage]{
-			MemoryStores: []automemory.MemoryStore{
-				{
-					Path: memoryDir,
-					Name: "local",
-				},
-			},
-			MemoryBackend: newLocal(),
-			Model:         baseModel,
+			MemoryDirectory: memoryDir,
+			MemoryBackend:   newLocal(),
+			Model:           baseModel,
 			Write: &automemory.WriteConfig[adk.AgenticMessage]{
 				Mode: automemory.WriteModeAsync,
-				HandleExtractionIterator: func(ctx context.Context, iter *adk.AsyncIterator[*adk.TypedAgentEvent[adk.AgenticMessage]]) error {
-					addChatLine(pterm.LightMagenta("saving memory..."))
-					for {
-						ev, ok := iter.Next()
-						if !ok {
-							addChatLine(pterm.LightMagenta("memory saved"))
-							return nil
-						}
-						if ev == nil {
-							continue
-						}
-						if ev.Err != nil {
-							return ev.Err
-						}
-					}
-				},
 			},
 			Coordination: &automemory.CoordinationConfig[adk.AgenticMessage]{
-				SessionIDFunc: func(ctx context.Context, state *adk.TypedChatModelAgentState[adk.AgenticMessage]) (string, error) {
-					return sessionID, nil
-				},
+				SessionID: sessionID,
 			},
 		},
 	)
